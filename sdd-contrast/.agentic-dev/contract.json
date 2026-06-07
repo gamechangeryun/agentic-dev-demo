@@ -15,6 +15,7 @@
   "integrations": {},
   "notes": [
     "3강 교육용 대조 데모: 명세 없이(vibe) vs 명세 기반(SDD)를 같은 수용기준으로 채점.",
-    "proof = contrast.py. SDD 측 4/4 통과 + vibe 측 누락 노출 시 exit 0."
+    "라이브 본 흐름: 학습자가 Claude Code로 otp.py를 만들고 grade.py로 채점(README의 라운드 1·2).",
+    "proof = contrast.py(참고 정답 기반, 결정적). 멱등 검증/강사 폴백용. SDD 4/4 + vibe<4/4면 exit 0."
   ]
 }
