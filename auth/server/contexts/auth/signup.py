@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""회원가입 — OTP 검증 통과 시 계정 생성, 멱등 보장."""
+"""회원가입: OTP 검증 통과 시 계정 생성, 멱등 보장."""
 from dataclasses import dataclass, replace
 
 from server.shared.idem import IdempotencyStore, idempotency_key

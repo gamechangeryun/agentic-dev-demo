@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""상담 응답 — 근거 규정을 다단계로 인용하고, 자격 미달이면 발급을 거부한다 (AC-3)."""
+"""상담 응답: 근거 규정을 다단계로 인용하고, 자격 미달이면 발급을 거부한다 (AC-3)."""
 from server.shared import rules
 
 
@@ -12,7 +12,7 @@ def answer(minwon_type, *, eligible=True):
     if not eligible:
         return {
             "status": "refused",
-            "reason": "자격 미달 — 발급 거부",
+            "reason": "자격 미달: 발급 거부",
             "citations": citations,
         }
     return {

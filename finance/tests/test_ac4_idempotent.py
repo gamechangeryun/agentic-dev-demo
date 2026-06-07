@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""AC-4 — 발급·정산 배치가 재실행돼도 중복을 만들지 않는다 (멱등)."""
+"""AC-4: 발급·정산 배치가 재실행돼도 중복을 만들지 않는다 (멱등)."""
 from server.contexts.eminwon.issue_svc import IssueResult
 from server.contexts.settlement.batch import SettlementLedger, run_settlement
 
@@ -12,7 +12,7 @@ def test_ac4_issue_is_idempotent(orch, agency_ok_fn):
     r2 = o.issue("u1", "전입신고", responder=agency_ok_fn)  # 재요청
     assert r1.idempotency_key == r2.idempotency_key
     assert r1.replay is False
-    assert r2.replay is True            # 두 번째는 재생 — 중복 발급 아님
+    assert r2.replay is True            # 두 번째는 재생: 중복 발급 아님
     assert o.issued_count("u1") == 1    # 발급은 1건만
 
 

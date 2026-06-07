@@ -1,4 +1,4 @@
-# 회원가입 OTP · 검증 (retained) — 회귀 4분면
+# 회원가입 OTP · 검증 (retained): 회귀 4분면
 
 > proof: `python3 proof/run_proof.py` → 10/10 PASS (exit 0).
 
@@ -11,5 +11,5 @@
 | 회귀 | 기존 로그인 무손상 | shared | PASS |
 
 ## Residual Risk
-- 실 브라우저(Playwright) 픽셀 비교·compose 부팅은 데모 범위 밖 — HTML parity로 대체.
+- 실 브라우저(Playwright) 픽셀 비교·compose 부팅은 데모 범위 밖: HTML parity로 대체.
 - 메일 발송·실 OTP 채널은 미구현(주입 OTP로 대체).

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""회귀 — 새 기능(발급) 외 공유 표면(자격검증·정산·원장)이 무손상인지 (shared surface)."""
+"""회귀: 새 기능(발급) 외 공유 표면(자격검증·정산·원장)이 무손상인지 (shared surface)."""
 from server.contexts.eminwon.issue_svc import IssueResult
 from server.contexts.settlement.batch import SettlementLedger, run_settlement
 from server.shared import rules

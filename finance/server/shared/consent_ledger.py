@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""동의 원장 — 부여·철회·만료를 append-only로 기록 (AC-5)."""
+"""동의 원장: 부여·철회·만료를 append-only로 기록 (AC-5)."""
 from dataclasses import dataclass
 
 

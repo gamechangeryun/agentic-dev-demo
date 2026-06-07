@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""회귀 — 기존 로그인 흐름(shared surface)이 회원가입 추가로 깨지지 않는다."""
+"""회귀: 기존 로그인 흐름(shared surface)이 회원가입 추가로 깨지지 않는다."""
 from server.contexts.auth.login import LoginService
 
 

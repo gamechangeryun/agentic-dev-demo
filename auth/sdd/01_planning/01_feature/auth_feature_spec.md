@@ -1,6 +1,6 @@
 # 회원가입 OTP · Acceptance Criteria (EARS)
 
-> 01_planning — 요구사항을 검증 가능한 EARS로 정제. 이 명세가 가드레일.
+> 01_planning: 요구사항을 검증 가능한 EARS로 정제. 이 명세가 가드레일.
 
 **AC-1** When 사용자가 회원가입을 요청하면, the system shall (email, purpose)에 묶인
 6자리 OTP를 발급하고 TTL(300초)을 건다.

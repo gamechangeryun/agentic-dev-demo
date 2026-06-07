@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""회원가입 — OTP 통과 시 계정 생성, 멱등."""
+"""회원가입: OTP 통과 시 계정 생성, 멱등."""
 
 
 def test_signup_after_otp(signup):

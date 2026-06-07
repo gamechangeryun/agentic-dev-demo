@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""자격 판정 — 예외 조건 충족 여부로 발급 자격을 결정 (AC-3 가드레일)."""
+"""자격 판정: 예외 조건 충족 여부로 발급 자격을 결정 (AC-3 가드레일)."""
 from server.shared import rules
 
 required_documents = rules.required_documents

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""AC-1 — 동의 완료 후 발급 요청 시 자격 규칙으로 서류를 산출·수집한다."""
+"""AC-1: 동의 완료 후 발급 요청 시 자격 규칙으로 서류를 산출·수집한다."""
 
 
 def test_ac1_issue_after_consent(orch, agency_ok_fn):

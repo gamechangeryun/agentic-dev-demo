@@ -1,6 +1,6 @@
 # 전자민원 자동 발급 · Acceptance Criteria (EARS)
 
-> 01_planning — 발주 요구사항정의서(`00_sources/02_requirements/MyLink_요구사항정의서_v1.0.docx`,
+> 01_planning: 발주 요구사항정의서(`00_sources/02_requirements/MyLink_요구사항정의서_v1.0.docx`,
 > 기능요구사항 SFR-001~005)를 검증 가능한 EARS 수용기준으로 정제한다. SFR → AC 1:1, 이 다섯 줄이 곧 가드레일이다.
 
 ## Acceptance Criteria
@@ -31,5 +31,5 @@ the system shall 자격 규칙으로 서류 목록을 산출하고 해당 연계
 | SFR-005 동의 철회·파기 | AC-5 | `tests/test_ac5_withdrawal.py` |
 | (공유 표면) | 회귀 | `tests/test_regression.py` |
 
-> 발주 요구사항정의서의 SFR이 EARS AC로 정제되고, 각 AC가 결정적 테스트로 검증됩니다 —
+> 발주 요구사항정의서의 SFR이 EARS AC로 정제되고, 각 AC가 결정적 테스트로 검증됩니다: 
 > `python3 proof/run_proof.py` 가 14개 전부 PASS면 요구사항이 코드까지 충족된 것입니다.

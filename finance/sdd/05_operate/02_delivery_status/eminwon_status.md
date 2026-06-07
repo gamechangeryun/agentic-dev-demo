@@ -5,7 +5,7 @@
 | 현재 baseline | 동의 후 전자민원 자동 발급 (AC-1~AC-5 구현 완료) |
 | proof 게이트 | PASS · 14/14 (`tmp/proof-results.json`) |
 | 근거 인용 | citation_exactness 3/3 |
-| 배포 환경 | DEV(로컬 인프로세스 데모) — PROD 미배포 |
+| 배포 환경 | DEV(로컬 인프로세스 데모): PROD 미배포 |
 | 모니터링 baseline | proof 게이트 + 근거 인용 검사 재실행 |
 
 ## 규제 산출물(데모 산출)

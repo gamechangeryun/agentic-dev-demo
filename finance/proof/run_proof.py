@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""결정적 proof 게이트 — pytest(AC-1~AC-5 + 회귀)를 돌려 tmp/proof-results.json 산출.
+"""결정적 proof 게이트: pytest(AC-1~AC-5 + 회귀)를 돌려 tmp/proof-results.json 산출.
 
 contract.json 의 `proof` 가 가리키는 명령. exit 0 = 전 게이트 통과.
 """
@@ -15,7 +15,7 @@ TMP = ROOT / "tmp"
 
 
 def _pytest_cmd():
-    """동작하는 pytest 러너를 찾는다 — 콘솔 스크립트 우선, 없으면 -m pytest."""
+    """동작하는 pytest 러너를 찾는다: 콘솔 스크립트 우선, 없으면 -m pytest."""
     exe = shutil.which("pytest")
     if exe:
         return [exe]

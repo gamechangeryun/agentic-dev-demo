@@ -6,7 +6,7 @@
 
 ## Assumptions
 - 연계기관 응답은 `responder(doc_code, attempt)` 콜러블로 주입(데모: 인프로세스).
-- PII 없음 — 사용자 식별자는 불투명 문자열만 사용.
+- PII 없음: 사용자 식별자는 불투명 문자열만 사용.
 - DEV 배포는 로컬 인프로세스 스텁. 망분리 운영계는 접근하지 않는다.
 
 ## Acceptance Criteria

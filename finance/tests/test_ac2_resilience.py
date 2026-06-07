@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""AC-2 — 기관 미응답 시 재시도3 → 서킷브레이커 → 대체 경로(graceful degradation)."""
+"""AC-2: 기관 미응답 시 재시도3 → 서킷브레이커 → 대체 경로(graceful degradation)."""
 from server.integration.adapters.gw.base_adapter import GatewayAdapter
 
 

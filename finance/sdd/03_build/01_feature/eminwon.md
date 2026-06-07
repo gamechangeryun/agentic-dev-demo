@@ -1,6 +1,6 @@
 # 전자민원 발급 · current-state
 
-> 03_build — dated 로그가 아니라 '지금 이렇게 떠 있다' 한 벌(Overwrite Rule).
+> 03_build: dated 로그가 아니라 '지금 이렇게 떠 있다' 한 벌(Overwrite Rule).
 
 ## Absorbed Planning
 - `01_planning/01_feature/eminwon_issue.md` (EARS AC-1~AC-5)

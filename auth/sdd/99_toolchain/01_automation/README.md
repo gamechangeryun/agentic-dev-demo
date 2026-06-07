@@ -1,4 +1,4 @@
-# 99_toolchain — SDD 자동화
+# 99_toolchain: SDD 자동화
 
 ## run_ui_parity.py
 OTP 화면 렌더를 캐노니컬 스냅샷(`sdd/04_verify/10_test/ui_parity/signup_otp.html`)과

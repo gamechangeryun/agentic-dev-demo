@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""로그인 — 기존 흐름(회귀 검증 대상 shared surface)."""
+"""로그인: 기존 흐름(회귀 검증 대상 shared surface)."""
 
 
 class LoginService:

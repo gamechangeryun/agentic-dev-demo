@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""멱등 처리 — idempotency_key로 중복 가입을 차단한다."""
+"""멱등 처리: idempotency_key로 중복 가입을 차단한다."""
 import hashlib
 import json
 

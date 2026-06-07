@@ -31,7 +31,7 @@ class IssueOrchestrator:
         self._issued = {}  # user_id -> [idempotency_key] (파기 대상 추적)
 
     def issue(self, user_id, minwon_type, *, responder, idem_key=None):
-        # AC-1: 동의 게이트 — 동의가 없거나 철회되면 처리 중단
+        # AC-1: 동의 게이트: 동의가 없거나 철회되면 처리 중단
         if not self.consent.is_active(user_id):
             return IssueResult(status="rejected", reason="consent_required")
 
@@ -41,7 +41,7 @@ class IssueOrchestrator:
         except rules.UnknownMinwon:
             return IssueResult(status="rejected", reason="unknown_minwon")
 
-        # AC-3: 가드레일 — 예외 조건(자격) 미충족 시 거부 (근거는 인용해 둠)
+        # AC-3: 가드레일: 예외 조건(자격) 미충족 시 거부 (근거는 인용해 둠)
         if not self.eligibility.is_eligible(user_id, minwon_type):
             return IssueResult(status="rejected", reason="exception_unmet",
                                citations=citations)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""AC-5 — 동의 철회 시 처리 중단·파기하고 동의 원장에 기록한다."""
+"""AC-5: 동의 철회 시 처리 중단·파기하고 동의 원장에 기록한다."""
 
 
 def test_ac5_withdraw_stops_processing(orch, agency_ok_fn):

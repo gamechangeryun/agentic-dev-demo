@@ -1,6 +1,6 @@
 # 전자민원 발급 · DEV 배포 runbook
 
-> 05_operate — 배포·운영 절차를 박제한다. main push = DEV 배포 트리거.
+> 05_operate: 배포·운영 절차를 박제한다. main push = DEV 배포 트리거.
 > 망분리 운영계(PROD)는 본 데모 경계 밖.
 
 ## 배포 절차 (DEV)

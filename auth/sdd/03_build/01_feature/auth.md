@@ -1,6 +1,6 @@
 # 회원가입 OTP · current-state
 
-> 03_build — Overwrite Rule(지금 상태 1벌).
+> 03_build: Overwrite Rule(지금 상태 1벌).
 
 ## Absorbed Planning
 - `01_planning/01_feature/auth_feature_spec.md` (AC-1~AC-6)
@@ -16,7 +16,7 @@
 | `contexts/auth/otp.py` | OTP 발급·검증·만료·잠금 | 1·3·4 |
 | `contexts/auth/signup.py` | 가입 + 멱등 | 2·5 |
 | `contexts/auth/screens.py` | OTP 입력 화면 | 6 |
-| `contexts/auth/login.py` | 기존 로그인(회귀) | — |
+| `contexts/auth/login.py` | 기존 로그인(회귀) | - |
 | `shared/idem.py` | idempotency_key | 5 |
 
 ## Current Behavior

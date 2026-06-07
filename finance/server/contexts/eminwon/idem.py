@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""멱등 처리 — idempotency_key로 중복 발급/정산을 차단한다 (AC-4)."""
+"""멱등 처리: idempotency_key로 중복 발급/정산을 차단한다 (AC-4)."""
 import hashlib
 import json
 

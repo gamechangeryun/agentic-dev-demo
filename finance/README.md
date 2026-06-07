@@ -18,11 +18,11 @@ python3 sdd/99_toolchain/01_automation/run_citation_check.py --feature eminwon  
 (또는 contract.json 의 `commands.build` / `commands.proof` / `commands.verify_dev` 그대로.)
 
 ## 구조
-- `server/` — 도메인 구현 (eminwon·settlement·advisory·gw 어댑터·shared 계약)
-- `tests/` — proof 게이트 = AC-1~AC-5 + 회귀 (14 케이스)
-- `sdd/` — SDD 5단계 산출물 (00_sources → 01_planning → 02_plan → 03_build → 04_verify → 05_operate → 99_toolchain)
-- `.agentic-dev/contract.json` — build/proof/deploy_dev/verify_dev 명령
-- `.claude/skills/sdd`, `.codex/skills/sdd` — 적용된 SDD 스킬
+- `server/`: 도메인 구현 (eminwon·settlement·advisory·gw 어댑터·shared 계약)
+- `tests/`: proof 게이트 = AC-1~AC-5 + 회귀 (14 케이스)
+- `sdd/`: SDD 5단계 산출물 (00_sources → 01_planning → 02_plan → 03_build → 04_verify → 05_operate → 99_toolchain)
+- `.agentic-dev/contract.json`: build/proof/deploy_dev/verify_dev 명령
+- `.claude/skills/sdd`, `.codex/skills/sdd`: 적용된 SDD 스킬
 
 ## AC ↔ 코드 ↔ 테스트
 | AC | 구현 | 테스트 |

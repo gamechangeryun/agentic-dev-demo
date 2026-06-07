@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""UI parity 게이트 — OTP 화면 렌더를 스냅샷과 대조한다.
+"""UI parity 게이트: OTP 화면 렌더를 스냅샷과 대조한다.
 
 강의 데모의 Playwright exactness gate를 이 환경(브라우저 비가용)에서
 결정적 HTML 스냅샷 parity로 대체. exit 0 = 일치.

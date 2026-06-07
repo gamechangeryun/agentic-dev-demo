@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""UI parity — OTP 화면 렌더가 스냅샷과 일치 (Playwright exactness 대용)."""
+"""UI parity: OTP 화면 렌더가 스냅샷과 일치 (Playwright exactness 대용)."""
 import pathlib
 
 from server.contexts.auth import screens
