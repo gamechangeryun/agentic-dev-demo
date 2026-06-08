@@ -1,8 +1,8 @@
 # agentic-dev-demo
 
 SDD × Claude Code 강의의 **클론-앤-런 데모 타깃**입니다. `agentic-dev` 하네스
-(`.claude`·`.codex`의 `skills/sdd` + `.agentic-dev/contract.json`)가 설치된 타깃 repo 두 개를
-담고 있어, **클론하면 바로 build·proof·verify가 돕니다.**
+(`.claude`·`.codex`의 `skills/sdd` + `.agentic-dev/contract.json`)가 설치된 타깃 repo 두 개(`auth`·`finance`)와,
+명세 유무를 직접 대조하는 핸즈온 데모(`sdd-contrast`)를 담고 있어, **클론하면 바로 build·proof·verify가 돕니다.**
 
 > 모든 데이터는 강의용 **가상**입니다 — 실재 기관·시스템·개인정보·실명 없음.
 
@@ -10,6 +10,7 @@ SDD × Claude Code 강의의 **클론-앤-런 데모 타깃**입니다. `agentic
 
 | 폴더 | 예제 | 강의 |
 | --- | --- | --- |
+| `sdd-contrast/` | 명세 없이(vibe) vs 명세대로(SDD)를 같은 채점기로 직접 대조 — 핸즈온 | S03 |
 | `auth/` | 회원가입 OTP 서비스 | S05·07·08·09·10·11·12·16 |
 | `finance/` | 금융·공공 대규모(MyLink) 동의 후 전자민원 자동 발급 | S13 |
 
@@ -29,6 +30,17 @@ python3 sdd/99_toolchain/01_automation/run_ui_parity.py      # contract: verify_
 
 또는 `.agentic-dev/contract.json` 의 `commands.build / proof / verify_dev` 를 그대로 실행.
 
+### sdd-contrast (S03 핸즈온)
+
+다른 타깃과 달리 의존성·SDD 산출물이 없는 **경량 대조 데모**입니다. 학습자가 Claude Code로 `otp.py`를
+직접 두 번(명세 없이 → 명세대로) 만들어 같은 채점기로 점수를 비교합니다. 상세는 `sdd-contrast/README.md`.
+
+```bash
+cd agentic-dev-demo/sdd-contrast   # 의존성 없음(파이썬 표준 라이브러리만)
+python3 grade.py                   # 학습자가 만든 otp.py 채점 (라운드 1 → 1/4, 라운드 2 → 4/4)
+python3 contrast.py                # 강사 폴백: vibe 1/4 vs SDD 4/4 결정적 재현
+```
+
 ## 구조 (각 타깃)
 
 - `.agentic-dev/contract.json` — build·proof·deploy_dev·verify_dev 명령
@@ -36,6 +48,8 @@ python3 sdd/99_toolchain/01_automation/run_ui_parity.py      # contract: verify_
 - `server/` — 도메인 구현 · `tests/` — proof 게이트(pytest)
 - `sdd/` — SDD 5단계 산출물 (`00_sources → 01_planning → 02_plan → 03_build → 04_verify → 05_operate → 99_toolchain`)
 - `proof/run_proof.py` — 결정적 게이트 러너
+
+> `sdd-contrast/` 는 위 구조 대신 채점기(`acceptance.py`·`grade.py`)·명세(`spec.md`)·참고구현(`impls.py`)만 둔 경량 데모입니다.
 
 ## 경계
 
