@@ -20,42 +20,42 @@
 ## Execution Checklist
 
 ### 1. 공유 커널 (shared)
-- [x] Money 값 객체를 만든다. 음수 금지, plus·times 연산을 제공한다.
-- [x] ErrorCode 와 HTTP 상태 매핑, DomainException, 전역 예외 핸들러를 만든다.
-- [x] Page 공용 페이징 값 객체를 만든다.
+- [ ] Money 값 객체를 만든다. 음수 금지, plus·times 연산을 제공한다.
+- [ ] ErrorCode 와 HTTP 상태 매핑, DomainException, 전역 예외 핸들러를 만든다.
+- [ ] Page 공용 페이징 값 객체를 만든다.
 
 ### 2. 상품 컨텍스트 (catalog)
-- [x] Product 애그리거트와 ProductStatus 를 만든다. 가격·재고·상태 불변식을 애그리거트에 모은다.
-- [x] ProductRepository 포트와 인메모리 어댑터를 만든다.
-- [x] CatalogService 에 등록(멱등)·조회·검색/페이징·재고가감·아카이브를 구현한다.
-- [x] ProductController 로 REST 표면을 노출한다.
+- [ ] Product 애그리거트와 ProductStatus 를 만든다. 가격·재고·상태 불변식을 애그리거트에 모은다.
+- [ ] ProductRepository 포트와 인메모리 어댑터를 만든다.
+- [ ] CatalogService 에 등록(멱등)·조회·검색/페이징·재고가감·아카이브를 구현한다.
+- [ ] ProductController 로 REST 표면을 노출한다.
 
 ### 3. 재고 컨텍스트 (inventory)
-- [x] Reservation 애그리거트와 상태(RESERVED·CONFIRMED·RELEASED)를 만든다.
-- [x] InventoryService 에 reserve·confirm·release 와 available 계산을 구현한다.
-- [x] reserve 를 동기화해 동시 예약에서도 oversell 을 막는다.
+- [ ] Reservation 애그리거트와 상태(RESERVED·CONFIRMED·RELEASED)를 만든다.
+- [ ] InventoryService 에 reserve·confirm·release 와 available 계산을 구현한다.
+- [ ] reserve 를 동기화해 동시 예약에서도 oversell 을 막는다.
 
 ### 4. 장바구니 컨텍스트 (cart)
-- [x] Cart 애그리거트에 담기·수량변경·삭제·비우기를 구현한다.
-- [x] CartService 에서 ARCHIVED 상품 담기를 막는다.
-- [x] CartController 와 가격 스냅샷 뷰를 제공한다.
+- [ ] Cart 애그리거트에 담기·수량변경·삭제·비우기를 구현한다.
+- [ ] CartService 에서 ARCHIVED 상품 담기를 막는다.
+- [ ] CartController 와 가격 스냅샷 뷰를 제공한다.
 
 ### 5. 주문 컨텍스트 (ordering)
-- [x] Order 애그리거트에 상태머신(CREATED→PAID→FULFILLED, CANCELLED)을 구현한다.
-- [x] OrderLine 으로 가격 스냅샷을 고정한다.
-- [x] OrderService 와 OrderController(목록·단건·이행·취소)를 만든다.
+- [ ] Order 애그리거트에 상태머신(CREATED→PAID→FULFILLED, CANCELLED)을 구현한다.
+- [ ] OrderLine 으로 가격 스냅샷을 고정한다.
+- [ ] OrderService 와 OrderController(목록·단건·이행·취소)를 만든다.
 
 ### 6. 결제 컨텍스트 (payment)
-- [x] Payment 애그리거트와 게이트웨이 포트를 만든다. 데모 어댑터는 결정적으로 동작한다.
-- [x] PaymentService 에 결제(멱등·예약확정·주문 PAID)와 환불을 구현한다.
-- [x] PaymentController 로 결제·조회·환불을 노출한다.
+- [ ] Payment 애그리거트와 게이트웨이 포트를 만든다. 데모 어댑터는 결정적으로 동작한다.
+- [ ] PaymentService 에 결제(멱등·예약확정·주문 PAID)와 환불을 구현한다.
+- [ ] PaymentController 로 결제·조회·환불을 노출한다.
 
 ### 7. 체크아웃 오케스트레이션 (checkout)
-- [x] CheckoutService 에 장바구니→예약→주문 흐름과 실패 시 보상 해제를 구현한다.
-- [x] 취소 보상(예약 해제 + 결제 환불)을 구현한다.
-- [x] CheckoutController 로 체크아웃을 노출한다.
+- [ ] CheckoutService 에 장바구니→예약→주문 흐름과 실패 시 보상 해제를 구현한다.
+- [ ] 취소 보상(예약 해제 + 결제 환불)을 구현한다.
+- [ ] CheckoutController 로 체크아웃을 노출한다.
 
 ### 8. 검증 (verify)
-- [x] 도메인 단위 테스트(ProductTest·OrderTest·InventoryServiceTest)를 작성한다.
-- [x] @SpringBootTest + MockMvc E2E 9개 시나리오를 작성한다.
-- [x] ./gradlew build 로 23개 전부 green 을 확인한다.
+- [ ] 도메인 단위 테스트(ProductTest·OrderTest·InventoryServiceTest)를 작성한다.
+- [ ] @SpringBootTest + MockMvc E2E 9개 시나리오를 작성한다.
+- [ ] ./gradlew build 로 23개 전부 green 을 확인한다.
