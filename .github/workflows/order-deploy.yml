@@ -1,0 +1,47 @@
+name: order — dev/prod 배포
+
+on:
+  push:
+    branches: [main]          # main 푸시 → 개발계
+    tags: ["[0-9]*.[0-9]*.[0-9]*"]  # 0.0.1 형식 태그 → 운영계
+
+jobs:
+  # ── 개발계 배포: main 브랜치 푸시 시 실행
+  deploy-dev:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run tests (gate)
+        working-directory: ecommerce/order
+        run: |
+          pip install -r requirements.txt
+          pytest tests/ -x -q
+
+      - name: Build & deploy to DEV
+        working-directory: ecommerce/order
+        run: |
+          docker compose -f docker-compose.dev.yml build
+          docker compose -f docker-compose.dev.yml up -d
+          echo "DEV 배포 완료 — http://localhost:8001/orders"
+
+  # ── 운영계 배포: v0.0.1 형식 태그 푸시 시 실행
+  deploy-prod:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run tests (gate)
+        working-directory: ecommerce/order
+        run: |
+          pip install -r requirements.txt
+          pytest tests/ -x -q
+
+      - name: Build & deploy to PROD
+        working-directory: ecommerce/order
+        run: |
+          docker compose -f docker-compose.prod.yml build
+          docker compose -f docker-compose.prod.yml up -d
+          echo "PROD 배포 완료 — ${{ github.ref_name }} → http://localhost:8000/orders"

@@ -1,0 +1,16 @@
+services:
+  order-api:
+    build:
+      context: .
+      target: dev          # Dockerfile의 dev 스테이지
+    ports:
+      - "8001:8000"
+    environment:
+      - ENV=development
+      - DEBUG=true
+    volumes:
+      - .:/app             # 소스 bind-mount → 코드 변경 즉시 반영
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/orders')"]
+      interval: 10s
+      retries: 3
