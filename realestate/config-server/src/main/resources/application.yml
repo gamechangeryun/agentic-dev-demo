@@ -1,0 +1,14 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        # 데모는 git 대신 classpath 네이티브 설정을 사용합니다(운영은 git backend 권장).
+        native:
+          search-locations: classpath:/config

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "name": "realfield-realestate-demo",
+  "spec": {
+    "planning_paths": [
+      "sdd/01_planning",
+      "sdd/02_plan"
+    ],
+    "canonical_targets_dir": "sdd/02_plan/canonical-targets"
+  },
+  "commands": {
+    "build": "./gradlew clean build -x test",
+    "proof": "./gradlew test",
+    "deploy_dev": "echo 'DEV 배포(데모): docker compose up -d (discovery → config → gateway → 도메인) : 운영계 미접근'",
+    "verify_dev": "./gradlew :ingestion-service:test :transaction-service:test :analytics-service:test --tests '*Ac*'"
+  },
+  "artifacts": {
+    "proof_output": "build/reports/tests/test/index.html"
+  },
+  "integrations": {
+    "github": {
+      "project_title": "RealField RealEstate Demo",
+      "issue_label": "agentic-dev"
+    },
+    "discord": {
+      "webhook_env_var": "DISCORD_WEBHOOK_URL"
+    },
+    "sdd": {
+      "plan_dir": "sdd/02_plan",
+      "verify_dir": "sdd/04_verify"
+    }
+  },
+  "notes": [
+    "강의 17강 단계형 SDD 핸즈온 타깃. 외부 연계는 실재 공개 API(data.go.kr 국토교통부 실거래가).",
+    "Java 21 · Spring Boot 3.5 · Spring Cloud 2025.0. 00_sources(요구사항)는 주어지고, 학습자가 01_planning·03_architecture·02_plan을 단계별로 생성한다.",
+    "shipped 01_planning·02_plan·서비스 코드는 참조 정답(강사 폴백)이다. 진행은 HANDSON.md를 따른다.",
+    "빌드·검증(./gradlew test)은 JDK 21 + Gradle 환경에서 수행한다."
+  ]
+}
