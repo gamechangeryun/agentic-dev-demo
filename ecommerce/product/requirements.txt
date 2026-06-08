@@ -1,3 +1,0 @@
-pytest>=7
-flask>=3
-gunicorn>=21

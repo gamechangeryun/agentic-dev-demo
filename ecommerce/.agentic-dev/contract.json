@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "name": "shop-ecommerce-demo",
+  "spec": {
+    "planning_paths": [
+      "sdd/01_planning",
+      "sdd/02_plan"
+    ],
+    "canonical_targets_dir": "sdd/02_plan/canonical-targets"
+  },
+  "commands": {
+    "build": "./gradlew clean build -x test",
+    "proof": "./gradlew test",
+    "deploy_dev": "echo 'DEV 부팅(데모): ./gradlew bootRun (단일 모놀리식, 인메모리 저장소) : 운영계 미접근'",
+    "verify_dev": "./gradlew test --tests 'kr.elice.shop.e2e.*'"
+  },
+  "artifacts": {
+    "proof_output": "build/test-results/test"
+  },
+  "integrations": {
+    "github": {
+      "project_title": "Shop Ecommerce Demo",
+      "issue_label": "agentic-dev"
+    },
+    "discord": {
+      "webhook_env_var": "DISCORD_WEBHOOK_URL"
+    },
+    "sdd": {
+      "plan_dir": "sdd/02_plan",
+      "verify_dir": "sdd/04_verify"
+    }
+  },
+  "notes": [
+    "10강 데모용 이커머스 모놀리식. Java 17 · Spring Boot 3.5 · Gradle. DDD bounded context(catalog·inventory·cart·ordering·payment·checkout)를 단일 배포 단위 패키지로 분리.",
+    "외부 DB·브로커 의존 없음(인메모리 리포지토리 포트/어댑터). 추가 인프라 없이 ./gradlew build 로 컴파일·테스트가 끝난다.",
+    "proof = JUnit 결정적 게이트. 단위 14 + E2E 9 = 23개. E2E 는 @SpringBootTest + MockMvc 로 실제 HTTP 라우팅을 통과시킨다.",
+    "verify_dev = E2E 시나리오만 재실행(전체 여정·취소·환불·oversell·검색페이징·멱등·아카이브·이행가드·결제거절).",
+    "검증 실적: 이 워크스페이스(JDK 17 + Gradle 8.5)에서 build·test 실행 → 23/23 PASS 확인."
+  ]
+}
