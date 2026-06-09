@@ -37,7 +37,7 @@
 | analytics-service | 8083 | 시세 통계 (read model, CQRS) |
 
 ## 구조
-- `sdd/00_sources/`: 주어지는 요구사항 (손대지 않음)
+- `sdd/00_sources/`: 주어지는 발주 입력 세 벌, 손대지 않음 (요구사항정의서·API 공개명세·데이터 명세서)
 - `sdd/01_planning/`: 구조화·아키텍처 산출물 (01_feature·03_architecture·04_data·05_api·07_integration·08·09)
 - `sdd/02_plan/`: 비중첩 작업 분할
 - `sdd/99_toolchain/01_automation/run_arch_check.py`: 아키텍처 게이트

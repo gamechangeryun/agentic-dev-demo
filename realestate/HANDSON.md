@@ -27,18 +27,21 @@ claude                       # Claude Code 실행 (.claude/skills/sdd 자동 적
 
 ## 15강 · Stage 1~3 : 요구사항에서 아키텍처 판단, 비중첩 플랜까지
 
-> 주어지는 것은 `sdd/00_sources/02_requirements/realfield-부동산실거래.md` 하나입니다.
+> 주어지는 것은 `sdd/00_sources` 의 발주 입력 세 벌입니다.
+> 요구사항정의서(`02_requirements/realfield-부동산실거래.md`, SFR·DAR·PER·SIR·SECR·CONR),
+> 외부 API 공개명세(`01_apis/molit_apt_trade_api.md`, data.go.kr 실거래 상세 자료),
+> 데이터 명세서(`03_data_spec/realprice_data_spec.md`, 항목 사전·코드 도메인·표기 규칙)입니다.
 > 학습자가 발화로 `01_planning` → `02_plan`을 생성합니다. shipped 산출물은 참조 정답입니다.
 
-### Stage 1 — 구조화 (00_sources → 01_planning)
+### Stage 1 · 구조화 (00_sources → 01_planning)
 ```
-> 00_sources/02_requirements/realfield-부동산실거래.md 를 SDD로 구조화해줘.
+> 00_sources 의 요구사항정의서·API 공개명세·데이터 명세서를 읽고 SDD로 구조화해줘.
   기능을 01_planning/01_feature 에 EARS(AC-1~AC-5)로, 비기능을 08_nonfunctional,
   보안을 09_security 로. 데이터 정합(콤마 금액 변환·해제거래 제외)을 수용기준으로 박아줘.
 ```
 확인: AC-1~AC-5가 판정 가능한 EARS인가, AC-3에 콤마 금액·해제 제외가 있는가.
 
-### Stage 2 — 아키텍처링 (사람이 판단)
+### Stage 2 · 아키텍처링 (사람이 판단)
 먼저 토론합니다. 읽기·쓰기 부하가 다른가(CQRS?), 외부 API 장애를 어디에 가둘까, 지금 비동기가 필요한가.
 ```
 > 이 서비스 특성을 고려해 MSA 경계를 01_planning/03_architecture 에 설계하고,
@@ -48,7 +51,7 @@ claude                       # Claude Code 실행 (.claude/skills/sdd 자동 적
 확인: bounded context가 MECE한가, 모듈 경계가 비중첩인가, **결정 근거가 남았는가**.
 라이브가 막히면 shipped `03_architecture/realfield_architecture.md`의 "사람이 판단한 지점" 절로 대조합니다.
 
-### Stage 3 — 플랜 (02_plan 비중첩 분할)
+### Stage 3 · 플랜 (02_plan 비중첩 분할)
 ```
 > 03_architecture 경계를 따라 02_plan/01_feature 에 todos를 만들고,
   모듈이 겹치지 않게 T1~T4 병렬 작업으로 나눠줘. common 공유 계약 소유자도 정해줘.
