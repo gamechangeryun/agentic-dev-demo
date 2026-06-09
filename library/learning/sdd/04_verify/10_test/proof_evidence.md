@@ -6,9 +6,9 @@
 ## 요약
 
 ```
-BUILD FAILED
-total tests = 7 · passed = 3 · failed = 4 · errors = 0
-AllNewModeTest        0/4
+BUILD SUCCESSFUL
+total tests = 7 · passed = 7 · failed = 0 · errors = 0
+AllNewModeTest        4/4
 LibraryAcceptanceTest 3/3
 ```
 
@@ -24,11 +24,11 @@ LibraryAcceptanceTest 3/3
 
 | 클래스 | 통과 | 실패 |
 | --- | --- | --- |
-| AllNewModeTest | 0 | 4 |
+| AllNewModeTest | 4 | 0 |
 
 ## 게이트 판정
 
-- 테스트 게이트: `./gradlew test` → **BUILD FAILED**
-- 전체 7개 중 3개 통과, 4개 실패.
+- 테스트 게이트: `./gradlew test` → **BUILD SUCCESSFUL**
+- 전체 7개 중 7개 통과, 0개 실패.
 
-> **실패** — 실패한 케이스를 수정한 뒤 다시 실행합니다.
+> **통과** — 모든 AC 가 JUnit 으로 검증되었습니다.
