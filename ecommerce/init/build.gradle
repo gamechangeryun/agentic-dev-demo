@@ -1,0 +1,25 @@
+// 이커머스 모놀리식 빌드입니다. 단일 Spring Boot 애플리케이션 안에서
+// DDD bounded context 를 패키지로 분리합니다. 외부 DB 없이 인메모리
+// 리포지토리(포트/어댑터)로 동작하므로 추가 인프라 없이 빌드·테스트됩니다.
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.0'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'kr.elice.shop'
+version = '0.1.0'
+
+java {
+    toolchain { languageVersion = JavaLanguageVersion.of(17) }
+}
+
+repositories { mavenCentral() }
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') { useJUnitPlatform() }
