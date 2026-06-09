@@ -4,7 +4,7 @@
 #   ./lab.sh reset    깨끗한 시작 상태로 되돌린다. springboot 신규 구현을 비우고,
 #                     migration.properties 를 세 모듈 모두 legacy 로 돌린다.
 #                     legacy 코드·테스트(수용기준)·라우터·게이트는 그대로 둔다.
-#   ./lab.sh solve    정답 신규 구현(solution/springboot)을 복원하고, 세 모듈을 모두
+#   ./lab.sh solve    정답 신규 구현(solution/src/…/springboot)을 복원하고, 세 모듈을 모두
 #                     new 로 전환한다. 라이브가 막혔을 때의 폴백이자 완성본 확인용.
 #   ./lab.sh verify   strangler 게이트 + gradle 수용기준 테스트를 돌린다.
 #   ./lab.sh status   현재 전환 상태(모듈별 legacy|new, springboot 구현 수)를 보여준다.
@@ -16,7 +16,7 @@ set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 cd "$HERE"
 SB="src/main/java/kr/elice/library/springboot"
-SOL="solution/springboot"
+SOL="solution/src/main/java/kr/elice/library/springboot"
 PROPS="src/main/resources/migration.properties"
 : "${JAVA_HOME:=$(/usr/libexec/java_home -v 17 2>/dev/null || true)}"
 export JAVA_HOME
@@ -42,7 +42,7 @@ reset() {
 }
 
 solve() {
-  if [ ! -d "$SOL" ]; then echo "[solve] solution/springboot 가 없습니다." >&2; exit 1; fi
+  if [ ! -d "$SOL" ]; then echo "[solve] solution 이 없습니다: $SOL" >&2; exit 1; fi
   rm -rf "$SB"; mkdir -p "$SB"
   cp "$SOL"/*.java "$SB"/
   write_modes new
