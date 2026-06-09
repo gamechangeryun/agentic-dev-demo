@@ -104,6 +104,62 @@ claude                       # Claude Code 실행 (.claude/skills/sdd 자동 적
 
 ---
 
+## 16강 (이어서) · 프론트엔드(web) : 발화로 3화면 + 브라우저 E2E
+
+> 백엔드를 세웠으면 같은 plan/계약 위에 Next.js 프론트를 얹습니다. **백엔드와 동형**:
+> 화면·공용 컴포넌트·api 구현만 비워 두고, 스캐폴딩(shadcn UI·계약 타입·게이트웨이 프록시·
+> E2E 스펙)은 제공합니다. **실습은 `learning/web` 에서 합니다.**
+
+주어지는 것(`learning/web` 스캐폴딩, 그대로 둠):
+- `src/app/layout.tsx` · `src/components/site-nav.tsx` · `src/components/ui/*`(shadcn)
+- `src/lib/types.ts`(백엔드 계약 1:1) · `src/lib/format.ts`(억/만원·㎡ 표기)
+- `src/app/api/gateway/[...path]/route.ts`(게이트웨이 프록시, CORS 회피)
+- `e2e/realfield.spec.ts`(결정적 브라우저 E2E) · `playwright.config.ts` · 빌드 설정
+
+비워 둔 것(placeholder "TODO: 발화로 구현"):
+- `src/app/{ingest,transactions,analytics}/page.tsx` · `src/app/page.tsx`(홈)
+- `src/components/query-form.tsx`(거래·분석 공용 조회 폼)
+- `src/lib/api.ts`(시그니처는 둠, 구현부 TODO)
+
+### W-0. 시작 상태로 되돌립니다
+```bash
+cd learning
+./lab.sh web-reset    # web 화면·컴포넌트·api 를 placeholder 로 (스캐폴딩은 보존)
+./lab.sh web-build    # placeholder 상태에서도 타입에러 0으로 통과(빌드 게이트)
+```
+`./lab.sh reset` 을 쓰면 **백엔드 도메인 + web 을 한 발로** 함께 시작 상태로 되돌립니다.
+
+### W-1. 세 화면을 발화로 구현
+`lib/types`(계약)와 `lib/api` 시그니처를 입구로 화면을 채웁니다. placeholder 주석에
+각 화면이 달아야 할 `data-testid` 가 명시되어 있습니다.
+```
+> ingest/page.tsx 구현: lawdCd(5자리)·dealYmd(YYYYMM) 입력 폼과 ingestAptTrade 호출,
+  upserted 결과 카드(멱등: 재수집 0건). data-testid: ingest-lawdcd·ingest-dealymd·btn-ingest·ingest-result.
+
+> transactions/page.tsx 구현: QueryForm(sggCd·년·월)으로 getTransactions 조회,
+  동/단지 검색·면적 필터·해제거래 토글·정렬·페이징 테이블. data-testid: btn-search·transactions-table·tx-row·cancel-badge·filter-canceled.
+
+> analytics/page.tsx 구현: getMarketStats + getTransactions 로 유효 거래건수·중위가·㎡당 단가 카드와
+  면적-가격 산점도. data-testid: btn-analyze·stat-tradecount·stat-median·stat-perm2·price-chart.
+
+> lib/api.ts 의 ingestAptTrade·getTransactions·getMarketStats 구현부를 프록시(/api/gateway/...) 호출로 채워줘.
+```
+
+### W-2. 브라우저 E2E 로 검증합니다
+```bash
+./lab.sh web-e2e
+# 백엔드(docker 6서비스) + Next(:3000) 기동 후 Playwright 로:
+#   수집(stub) → 거래조회(정상4+해제1=5행, 토글 시 4행) → 시세분석(tradeCount=4, median "8억…")
+# 결정적(stub 프로필 고정값). HEADED=1 ./lab.sh web-e2e 로 브라우저 창을 띄워 시연할 수 있습니다.
+```
+라이브가 막히면 `./lab.sh web-solve`(또는 백엔드까지 함께 `./lab.sh solve`)로 정답 구현을
+복원해 같은 E2E를 통과시킵니다. 완성본은 `complete/web` 에서 대조합니다.
+
+> **멱등 보장:** `web-reset → 위 발화 → web-e2e`를 몇 번 반복해도 stub 고정값으로 같은 결과에
+> 수렴합니다. placeholder 상태에서는 `web-build`(타입체크)는 통과, `web-e2e`는 실패가 정상입니다.
+
+---
+
 ## 16강 마무리 · 본체 프레임워크 agentic-dev
 
 이 부동산 레포는 **본체 프레임워크가 설치한 타깃**입니다. 데모로 SDD 흐름을 손으로 익혔다면,

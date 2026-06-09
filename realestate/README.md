@@ -33,6 +33,41 @@ export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 - `init/` : 시작 시 도메인 구현이 없어 컴파일에서 멈춥니다. 도메인 4개 모듈을 채우면
   complete 와 같은 결과로 수렴합니다.
 
+## 프론트엔드 (web) — Next.js + 브라우저 E2E
+
+각 버전에는 백엔드 게이트웨이(8080)에 붙는 Next.js 15 프론트(`web/`)가 함께 있습니다.
+3화면(`/ingest` 수집 · `/transactions` 거래조회 · `/analytics` 시세분석)을 Next route
+handler 프록시(`/api/gateway/...`)로 게이트웨이에 연결합니다. **백엔드와 동형**으로
+구현부만 비우고 스캐폴딩은 제공합니다.
+
+| 버전 | web 상태 |
+| --- | --- |
+| `init/web`, `learning/web` | 시작 상태(placeholder). 화면·공용 컴포넌트(query-form)·`lib/api` 구현이 비어 있고 "TODO: 발화로 구현" 스텁만 있습니다. 스캐폴딩은 제공됩니다: `layout`·`site-nav`·`ui/*`(shadcn)·`lib/types`·`lib/format`·프록시 route handler·E2E 스펙·설정. **학습자가 `learning/web`에서 발화로 채웁니다.** |
+| `complete/web` | 3화면이 모두 구현된 완성본. 빌드·브라우저 E2E 통과. 정답·대조용. |
+
+프론트 발화 흐름: `lib/types`(백엔드 계약 1:1)와 `lib/api` 시그니처를 입구로,
+각 화면을 발화로 구현합니다 — 수집 폼→`ingestAptTrade`(멱등 upserted), 거래조회→
+`getTransactions`(검색·필터·정렬·페이징), 시세분석→`getMarketStats`+산점도.
+E2E가 기대하는 `data-testid`(`btn-ingest`·`transactions-table`·`stat-median` 등)는
+placeholder 주석에 명시되어 있습니다.
+
+```bash
+# (web 명령은 Node.js 필요. 백엔드 명령과 한 lab.sh 안에 있습니다.)
+./lab.sh status        # 백엔드 + web 구현 상태(placeholder/구현됨)를 함께 표시
+./lab.sh web-build     # next build — placeholder 상태에서도 타입에러 0으로 통과
+./lab.sh web-dev       # 개발 서버(:3000) — 강의 시연용
+./lab.sh web-e2e       # 백엔드(docker 6서비스) + Next(:3000) + Playwright 브라우저 E2E
+./lab.sh web-reset     # web 화면·컴포넌트·api 구현만 placeholder 로 되돌림(스캐폴딩 보존)
+./lab.sh web-solve     # web/solution → web/src 정답 복원(라이브 폴백)
+```
+
+- `learning/web`, `init/web` : placeholder 상태로 `web-build`는 통과(타입에러 0)하지만,
+  실제 화면 동작이 없어 `web-e2e`는 실패하는 것이 정상입니다. 발화로 채우면 통과합니다.
+- `complete/web` : `web-build` · `web-e2e` 모두 통과.
+- `./lab.sh reset` / `./lab.sh solve` 는 **백엔드 도메인 + web 을 한 발로** 함께
+  처리합니다(web-* 단독 명령도 유지). complete/web 에는 placeholder/solution 스냅샷이
+  없어 reset/solve 가 web 을 건드리지 않습니다(정답 보존).
+
 ## 멱등성
 
 단위 테스트는 난수·실시간·네트워크에 의존하지 않습니다. 외부 data.go.kr 호출은
