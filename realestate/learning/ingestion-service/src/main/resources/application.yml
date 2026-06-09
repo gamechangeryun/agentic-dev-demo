@@ -1,0 +1,24 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: ingestion-service
+  config:
+    # Config 서버에서 molit·resilience4j 설정을 받아옵니다.
+    import: optional:configserver:http://localhost:8888
+
+transaction:
+  base-url: lb://transaction-service   # 디스커버리 기반 로드밸런싱으로 거래원장에 적재 요청합니다.
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+# Config 서버 미기동 시 로컬 기본값(데모 단독 실행용).
+molit:
+  base-url: ${MOLIT_BASE_URL:https://apis.data.go.kr/1613000}
+  apt-trade-path: /RTMSDataSvcAptTrade/getRTMSDataSvcAptTrade
+  service-key: ${MOLIT_SERVICE_KEY:}
+  num-of-rows: 1000

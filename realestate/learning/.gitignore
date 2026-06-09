@@ -1,0 +1,9 @@
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+*.log
+.idea/
+.DS_Store
+# 인증키는 절대 커밋하지 않습니다 (Config·환경변수로만 주입)
+**/application-local.yml
+.env

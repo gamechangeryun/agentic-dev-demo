@@ -5,9 +5,11 @@
 > 16강은 병렬 구현과 검증(Stage 4)입니다. 모든 단계는 **몇 번이든 같은 결과로 반복(멱등)** 됩니다.
 
 ## 준비
+
+실습은 시작 상태인 `init/` 에서 출발합니다. 완성본 대조는 옆 `complete/` 를 봅니다.
 ```bash
 git clone https://github.com/say828/agentic-dev-demo.git
-cd agentic-dev-demo/realestate
+cd agentic-dev-demo/realestate/init
 claude                       # Claude Code 실행 (.claude/skills/sdd 자동 적용)
 ```
 

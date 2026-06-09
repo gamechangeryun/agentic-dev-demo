@@ -1,52 +1,42 @@
-# RealField 부동산 실거래가 대규모 MSA 데모 (15·16강)
+# realestate — 부동산 대규모 MSA 데모 (init / complete)
 
-> 실재하는 공개 데이터(data.go.kr 국토교통부 부동산 실거래가) 위에서 대규모 Spring Cloud MSA를
-> **Claude Code 발화만으로** SDD 5단계로 개발하는 데모 타깃입니다. 발주 맥락(사업명·규모)은
-> 강의용 가상이며 개인정보·실명은 없습니다. 15강은 요구사항·아키텍처 판단, 16강은 병렬 구현·검증입니다.
+15·16강 "부동산 대규모 프로젝트" 실습의 러닝 예제입니다. 실재 공개 데이터
+(data.go.kr 국토교통부 실거래가)를 소재로, Java 17 · Spring Boot · Spring Cloud 로
+만든 마이크로서비스(MSA)를 SDD 5단계로 세웁니다. 도메인 모듈
+(common · ingestion-service · transaction-service · analytics-service)과 인프라 모듈
+(service-discovery · config-server · api-gateway)로 나뉩니다. 같은 예제를 두 형태로 둡니다.
 
-## 무엇인가
-"시군구·계약월 실거래 수집 → 정규화·멱등 적재 → 시세 통계 CQRS 조회" 한 기능을, 대규모·외부연계
-제약(회복력·정합·멱등·읽기분리)과 함께 구현한 Gradle 멀티모듈 Spring Cloud MSA입니다.
-
-## 실습은 멱등합니다 (lab.sh)
-실습은 몇 번이든 같은 결과로 반복됩니다. 발화 실습은 `reset`에서 출발합니다.
-```bash
-./lab.sh status     # 도메인 구현 존재 여부
-./lab.sh reset      # 도메인 구현(common·ingestion·transaction·analytics)을 비운 시작 상태
-./lab.sh verify     # 아키텍처 게이트(7) + gradle 단위 테스트(8)
-./lab.sh solve      # 정답 구현 복원 (라이브 폴백·완성본 확인)
-```
-`reset → 발화로 구현 → verify → reset`을 반복해도 매번 **아키텍처 게이트 PASS(7/7) + 단위 8/8**로
-수렴합니다. 단위 테스트는 외부 data.go.kr를 호출하지 않는 순수 도메인 로직이라 네트워크·인증키
-없이 결정적입니다. 검증 실적: 이 워크스페이스(**JDK 17 + Gradle 8.5 래퍼**)에서 arch 7/7 · 단위 8/8.
-
-진행 절차(15강 Stage 1~3, 16강 Stage 4)는 `HANDSON.md`를 따릅니다.
-
-## 스택
-- Java 17 · Spring Boot 3.5.x · Spring Cloud 2025.0 (Northfields) · Gradle 멀티모듈
-
-## 모듈 (7)
-| 모듈 | 포트 | 역할 |
+| 폴더 | 버전 | 무엇인가 |
 | --- | --- | --- |
-| service-discovery | 8761 | Eureka 디스커버리 |
-| config-server | 8888 | 인증키·엔드포인트·회복력 정책 외부화 |
-| api-gateway | 8080 | 단일 진입점·라우팅 |
-| common | (lib) | 표준 DTO·금액 파서(정합 규칙 1곳) |
-| ingestion-service | 8081 | data.go.kr 수집·정규화·회복력 |
-| transaction-service | 8082 | 멱등 적재·조회 (write model) |
-| analytics-service | 8083 | 시세 통계 (read model, CQRS) |
+| `init/` | 초기 버전 | 강의 시작 상태. sdd 설계 문서 + 테스트 스펙 + 아키텍처 게이트 + 인프라 모듈(discovery·config·gateway)만 있고, 도메인 4개 모듈의 `src/main/java` 구현은 비어 있습니다. 학습자가 발화로 채웁니다. |
+| `complete/` | 완성 버전 | 도메인 4개 모듈이 모두 구현된 완성본. 아키텍처 게이트 7/7 PASS + gradle 단위 8/8 통과. 정답·대조용. |
 
-## 구조
-- `sdd/00_sources/`: 주어지는 요구사항 (손대지 않음)
-- `sdd/01_planning/`: 구조화·아키텍처 산출물 (01_feature·03_architecture·04_data·05_api·07_integration·08·09)
-- `sdd/02_plan/`: 비중첩 작업 분할
-- `sdd/99_toolchain/01_automation/run_arch_check.py`: 아키텍처 게이트
-- `*/src/main/java`: 모듈별 구현 · `solution/`: 정답 스냅샷(lab.sh가 복원)
-- `lab.sh`: 멱등 실습 하네스 (reset/solve/verify/status)
-- `.claude/skills/sdd`·`.codex/skills/sdd`: 적용된 SDD 스킬
-- `.agentic-dev/contract.json`: build/proof/deploy_dev/verify_dev 명령
+## 실습 방법
 
-## 경계 (정직)
-단위 검증은 네트워크 없이 결정적입니다. 실제 서비스 부팅 E2E(eureka·gateway·도메인 동시 기동)와
-data.go.kr 실호출은 Docker·인증키가 필요합니다(강사 환경). 인증키는 환경변수로만 주입하고
-git·이미지에 넣지 않습니다.
+1. `cd init` 에서 시작합니다. PPT(15·16강)와 `HANDSON.md`의 발화 흐름을 따라
+   Claude Code 로 도메인 모듈을 구현합니다.
+   - 15강: 요구사항 정제와 아키텍처 판단(Stage 1~3). `sdd/00_sources` 하나에서
+     `01_planning` → `02_plan` 을 발화로 생성합니다.
+   - 16강: 비중첩 플랜을 병렬로 코드에 내리고(Stage 4) 게이트·테스트로 검증합니다.
+2. 막히거나 결과를 대조하려면 `complete/` 를 봅니다.
+
+## 각 버전 검증 (동일 명령)
+
+```bash
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+./lab.sh status     # 도메인 구현 존재 여부
+./lab.sh verify     # 아키텍처 게이트(7) + gradle 단위 테스트(8)
+./lab.sh e2e        # 6개 서비스 docker compose 부팅 + 게이트웨이 통과 E2E (Docker 필요)
+```
+
+- `complete/` : 아키텍처 게이트 7/7 PASS · 단위 8/8 통과.
+- `init/` : 시작 시 도메인 구현이 없어 컴파일에서 멈춥니다. 도메인 4개 모듈을 채우면
+  complete 와 같은 결과로 수렴합니다.
+
+## 멱등성
+
+단위 테스트는 난수·실시간·네트워크에 의존하지 않습니다. 외부 data.go.kr 호출은
+런타임 전용이고 단위 검증은 순수 도메인 로직만 봅니다. 적재는 거래 자연키로 멱등
+처리되어 같은 입력을 여러 번 넣어도 한 번만 반영됩니다. 학습자의 구현 코드가 매번
+조금씩 달라도, 고정된 아키텍처 게이트와 테스트 스펙을 통과하는 한 항상 같은 결과로
+수렴합니다.

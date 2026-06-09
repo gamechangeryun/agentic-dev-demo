@@ -1,0 +1,10 @@
+rootProject.name = 'realfield'
+
+// Spring Cloud MSA 멀티모듈 구성 (Java 21 · Spring Boot 3.5 · Spring Cloud 2025.0)
+include 'common'              // 공유 DTO·에러·지역코드 (라이브러리)
+include 'service-discovery'  // Eureka Server
+include 'config-server'      // Spring Cloud Config Server
+include 'api-gateway'        // Spring Cloud Gateway (단일 진입점)
+include 'ingestion-service'  // data.go.kr 수집·정규화·회복력
+include 'transaction-service'// 실거래 원장 적재·조회 (write model)
+include 'analytics-service'  // 시세 통계 CQRS (read model)

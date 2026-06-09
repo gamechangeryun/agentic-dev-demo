@@ -1,0 +1,5 @@
+rootProject.name = 'shop'
+
+// 이커머스 단일 모놀리식 모듈입니다.
+// 마이크로서비스가 아니라, 하나의 배포 단위 안에서 DDD bounded context 를
+// 패키지로 분리합니다: catalog · inventory · cart · ordering · payment · checkout.

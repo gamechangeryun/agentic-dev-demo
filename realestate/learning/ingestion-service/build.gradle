@@ -1,0 +1,16 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'java'
+}
+
+dependencies {
+    implementation project(':common')
+    implementation 'org.springframework.boot:spring-boot-starter-web'       // servlet(Tomcat): 컨트롤러에서 block() 허용
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'   // WebClient (lb:// 적재 호출)
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3'
+    // data.go.kr 응답은 기본 XML이므로 XML 매핑을 추가합니다.
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+}

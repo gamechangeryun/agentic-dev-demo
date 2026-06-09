@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true        # eureka에 등록된 서비스명으로 자동 라우팅합니다.
+          lower-case-service-id: true
+      routes:
+        - id: ingestion
+          uri: lb://ingestion-service
+          predicates:
+            - Path=/api/v1/ingest/**
+        - id: transaction
+          uri: lb://transaction-service
+          predicates:
+            - Path=/api/v1/transactions/**
+        - id: analytics
+          uri: lb://analytics-service
+          predicates:
+            - Path=/api/v1/market-stats/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

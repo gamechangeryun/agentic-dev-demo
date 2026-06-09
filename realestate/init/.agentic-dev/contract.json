@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "name": "realfield-realestate-demo",
+  "spec": {
+    "planning_paths": [
+      "sdd/01_planning",
+      "sdd/02_plan"
+    ],
+    "canonical_targets_dir": "sdd/02_plan/canonical-targets"
+  },
+  "commands": {
+    "build": "./gradlew clean build -x test",
+    "proof": "./lab.sh verify",
+    "deploy_dev": "docker compose up -d --build",
+    "verify_dev": "./lab.sh e2e"
+  },
+  "artifacts": {
+    "proof_output": "build/reports/tests/test/index.html"
+  },
+  "integrations": {
+    "github": {
+      "project_title": "RealField RealEstate Demo",
+      "issue_label": "agentic-dev"
+    },
+    "discord": {
+      "webhook_env_var": "DISCORD_WEBHOOK_URL"
+    },
+    "sdd": {
+      "plan_dir": "sdd/02_plan",
+      "verify_dir": "sdd/04_verify"
+    }
+  },
+  "notes": [
+    "강의 15·16강 부동산 대규모 MSA 핸즈온 타깃. 외부 연계는 실재 공개 API(data.go.kr 국토교통부 실거래가).",
+    "Java 17 · Spring Boot 3.5 · Spring Cloud 2025.0. 멱등 실습: ./lab.sh reset → 발화 구현 → ./lab.sh verify (아키텍처 7/7 + 단위 8/8).",
+    "proof = ./lab.sh verify (결정적·오프라인). verify_dev = ./lab.sh e2e (docker compose 6서비스 부팅 후 게이트웨이 통과 E2E).",
+    "data.go.kr 실호출은 ingestion의 stub 프로필로 대체해 부팅 E2E를 네트워크·인증키 없이 결정적으로 돌린다(tradeCount=4·중위 850,000,000원).",
+    "검증 실적: 이 환경(JDK17+Gradle+Docker)에서 lab.sh verify 7/7·8/8, lab.sh e2e PASS."
+  ]
+}
