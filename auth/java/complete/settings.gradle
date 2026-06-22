@@ -1,0 +1,4 @@
+rootProject.name = 'demo-target-auth'
+
+// 회원가입 OTP 단일 Spring Boot 모듈입니다. SDD 5단계 강의(S05·07·08·09·10·11·12·16)가
+// 공유하는 러닝 예제로, bounded context 를 패키지로 분리합니다.

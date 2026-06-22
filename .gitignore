@@ -1,9 +1,17 @@
+# 빌드 산출물 (자바)
+build/
+.gradle/
+bin/
+# 빌드 산출물 (파이썬)
 __pycache__/
 *.pyc
+.venv/
 .pytest_cache/
 tmp/
-.venv/
-
-# 작업 부산물
-.playwright-mcp/
-*_preview.png
+# 마븐(sdd-contrast/java)
+target/
+# OS / IDE
+.DS_Store
+.idea/
+*.iml
+.vscode/

@@ -1,0 +1,14 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: mylink-finance-demo
+
+# 강의 데모용 가상 금융·공공 서비스(MyLink). 실재 기관·시스템·개인정보 없음.
+demo:
+  gateway:
+    max-retries: 3
+    failure-threshold: 3
+  settlement:
+    fee-per-issue: 1000

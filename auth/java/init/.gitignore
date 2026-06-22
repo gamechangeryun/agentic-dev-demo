@@ -1,0 +1,15 @@
+# Gradle / 빌드 산출물
+.gradle/
+build/
+bin/
+
+# proof 임시 산출(매 ./gradlew test 마다 재생성, 추적은 _evidence 스냅샷)
+tmp/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store

@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "name": "realfield-realestate-demo-python",
+  "spec": {
+    "planning_paths": [
+      "../sdd/01_planning",
+      "../sdd/02_plan"
+    ]
+  },
+  "commands": {
+    "build": "python3 -m compileall -q .",
+    "proof": "python3 -m pytest -q",
+    "deploy_dev": "echo 'DEV 배포(데모): python3 -m realfield.app 로 단일 프로세스 실행 : 운영계 미접근'",
+    "verify_dev": "python3 -m pytest -q tests/test_market_stat.py tests/test_end_to_end.py"
+  },
+  "artifacts": {
+    "proof_output": ".pytest_cache"
+  },
+  "notes": [
+    "자바 Spring Cloud MSA(7모듈)의 파이썬 개념 보존 축소판. 시세 추정(analytics) 중심.",
+    "핵심 도메인 3개(transaction·analytics·ingestion)를 단일 프로세스로 합치되 모듈 파일로 서비스 경계를 유지한다.",
+    "MOLIT(data.go.kr) 외부 API 는 SampleMolitSource 인메모리 샘플로 대체한다(인증키·네트워크 불필요).",
+    "도메인 규칙 동등성이 핵심: 중위가격, canceled 제외(AC-3), ㎡당 단가, 멱등 적재(AC-4).",
+    "런타임은 표준 라이브러리만 사용. proof(pytest)는 requirements.txt 로 설치한다."
+  ]
+}

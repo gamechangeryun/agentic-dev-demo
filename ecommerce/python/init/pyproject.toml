@@ -1,0 +1,5 @@
+[tool.pytest.ini_options]
+# 테스트 디렉토리와 파일 패턴을 고정해 결정적으로 수집합니다.
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-q"

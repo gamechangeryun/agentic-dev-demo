@@ -1,0 +1,4 @@
+rootProject.name = 'demo-target-finance'
+
+// 금융·공공 대규모(MyLink) 단일 Spring Boot 모듈입니다. '동의 후 전자민원 자동 발급'을
+// 인메모리 원장·정책으로 구현하며, S13 강의의 검증 대상입니다.

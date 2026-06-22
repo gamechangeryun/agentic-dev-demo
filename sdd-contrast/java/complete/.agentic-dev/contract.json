@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "name": "sdd-contrast-demo-java",
+  "spec": {
+    "planning_paths": [],
+    "canonical_targets_dir": ""
+  },
+  "commands": {
+    "build": "mvn -q -o compile",
+    "proof": "mvn -q test",
+    "deploy_dev": "echo '대조 데모 — 배포 없음'",
+    "verify_dev": "mvn -q test"
+  },
+  "artifacts": {},
+  "integrations": {},
+  "notes": [
+    "3강 교육용 대조 데모(자바·Maven): 명세 없이(vibe) vs 명세 기반(SDD)를 같은 수용기준으로 채점.",
+    "proof = mvn test(ContrastTest, 참고 정답 기반, 결정적). SDD 4/4 + vibe<4/4면 exit 0.",
+    "라이브 본 흐름은 학습자가 Claude Code로 Otp 구현을 만들고 채점하는 것이다."
+  ]
+}

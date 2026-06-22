@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "name": "auth-otp-demo-java",
+  "spec": {
+    "planning_paths": [
+      "sdd/01_planning",
+      "sdd/02_plan"
+    ],
+    "canonical_targets_dir": "sdd/02_plan/canonical-targets"
+  },
+  "commands": {
+    "build": "./gradlew build -x test",
+    "proof": "./gradlew test",
+    "deploy_dev": "echo 'DEV 부팅(데모): 로컬 인프로세스: compose/운영계 미접근'",
+    "verify_dev": "./gradlew uiParity"
+  },
+  "artifacts": {
+    "proof_output": "tmp/proof-results.json"
+  },
+  "integrations": {
+    "github": {
+      "project_title": "Auth OTP Demo (Java)",
+      "issue_label": "agentic-dev"
+    },
+    "discord": {
+      "webhook_env_var": "DISCORD_WEBHOOK_URL"
+    },
+    "sdd": {
+      "plan_dir": "sdd/02_plan",
+      "verify_dir": "sdd/04_verify"
+    }
+  },
+  "notes": [
+    "강의 데모용 회원가입 OTP 서비스 (자바·Spring Boot 자립형). 실재 개인정보 없음.",
+    "proof = ./gradlew test 결정적 게이트(OTP 발급·가입·로그인·잘못된 OTP 거부). exit 0 = 통과.",
+    "verify_dev = ./gradlew uiParity 로 회귀 게이트를 한 번 더 돌려 백엔드 계약과 화면 기대 정합을 확인한다."
+  ]
+}

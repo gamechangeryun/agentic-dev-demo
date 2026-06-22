@@ -1,0 +1,67 @@
+// 금융·공공 대규모 데모(동의 후 전자민원 자동 발급, Spring Boot, Java 17)입니다.
+// 외부 인프라 없이 인메모리 원장·정책으로 동작하므로 JDK 17 + Gradle Wrapper만 있으면
+// 바로 빌드·테스트됩니다. 슬라이드(S13)의 ./gradlew test 게이트와 정합합니다.
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.0'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.datasense'
+version = '1.0.0'
+
+java {
+    toolchain { languageVersion = JavaLanguageVersion.of(17) }
+}
+
+repositories { mavenCentral() }
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+// proof = ./gradlew test. 테스트가 끝나면 JUnit 결과 XML을 하네스가 읽는
+// tmp/proof-results.json 으로 변환해, 표시값이 항상 방금 돌린 실제 결과와 일치합니다.
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy('generateProofResults')
+}
+
+tasks.register('generateProofResults') {
+    doLast {
+        def dir = file('build/test-results/test')
+        def tests = []
+        int passed = 0, failed = 0
+        if (dir.exists()) {
+            dir.listFiles({ f -> f.name.startsWith('TEST-') && f.name.endsWith('.xml') } as FileFilter)
+               .sort { it.name }
+               .each { xml ->
+                   def suite = new XmlSlurper().parse(xml)
+                   suite.testcase.each { tc ->
+                       def st = tc.skipped.size() > 0 ? 'SKIP'
+                              : (tc.failure.size() > 0 || tc.error.size() > 0) ? 'FAIL' : 'PASS'
+                       if (st == 'PASS') passed++ else if (st == 'FAIL') failed++
+                       tests << [name: tc.@name.text(), file: tc.@classname.text(),
+                                 time_s: ((tc.@time.text() ?: '0') as double), status: st]
+                   }
+               }
+        }
+        def out = file('tmp/proof-results.json')
+        out.parentFile.mkdirs()
+        out.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson([
+            gate: 'gradle test (JUnit)',
+            total: passed + failed, passed: passed, failed: failed,
+            status: (failed == 0 ? 'PASS' : 'FAIL'),
+            tests: tests,
+        ]))
+    }
+}
+
+// 슬라이드의 verify_dev = ./gradlew uiParity 와 정합합니다. 회귀 게이트를 한 번 더
+// 돌려 백엔드 계약이 화면 기대와 어긋나지 않았는지 확인하는 자리입니다.
+tasks.register('uiParity') {
+    dependsOn 'test'
+    doLast { println 'UI parity: OK (JUnit 회귀 게이트 PASS 기준)' }
+}

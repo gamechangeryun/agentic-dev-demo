@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: demo-target-auth
+
+# OTP 정책: TTL 300초, 최대 시도 5회 (auth_feature_spec.md AC-1·AC-3·AC-4)
+auth:
+  otp:
+    ttl-seconds: 300
+    max-attempts: 5

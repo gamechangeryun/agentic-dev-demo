@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "name": "shop-ecommerce-demo-python",
+  "spec": {
+    "planning_paths": [
+      "sdd/01_planning",
+      "sdd/02_plan"
+    ],
+    "canonical_targets_dir": "sdd/02_plan/canonical-targets"
+  },
+  "commands": {
+    "build": "python3 -m compileall -q shop tests",
+    "proof": "python3 run_proof.py",
+    "deploy_dev": "echo 'DEV 부팅(데모): 파이썬 도메인 포팅. 인메모리 저장소(dict)로 외부 인프라 없이 동작 : 운영계 미접근'",
+    "verify_dev": "python3 run_proof.py"
+  },
+  "artifacts": {
+    "proof_output": "tests"
+  },
+  "integrations": {
+    "github": {
+      "project_title": "Shop Ecommerce Demo (Python)",
+      "issue_label": "agentic-dev"
+    },
+    "discord": {
+      "webhook_env_var": "DISCORD_WEBHOOK_URL"
+    },
+    "sdd": {
+      "plan_dir": "sdd/02_plan",
+      "verify_dir": "sdd/04_verify"
+    }
+  },
+  "notes": [
+    "10강 데모용 이커머스 모놀리식의 파이썬 포팅입니다. 자바 Spring Boot solution 의 DDD bounded context(catalog·inventory·cart·ordering·payment·checkout) 도메인 규칙을 순수 파이썬으로 옮겼습니다. 프레임워크 1:1 이식이 아니라 '개념·규칙 동등성'이 목표입니다.",
+    "도메인 코드는 표준 라이브러리만 사용합니다(런타임 의존성 0). 인메모리 저장소(dict)로 외부 DB·브로커 없이 동작합니다.",
+    "build = python3 -m compileall 로 전체 모듈 컴파일 점검. proof = pytest 결정적 게이트. run_proof.py 는 pytest 가 없으면 로컬 .venv 에 자동 설치 후 실행합니다(시스템 파이썬 미오염).",
+    "핵심 규칙: 멱등 결제(같은 키 1회 반영·이중 청구 차단), 재고 차감(예약→확정 시 물리 차감, oversell 거부, 동시성 락), 주문 상태머신(CREATED→PAID→FULFILLED·취소 보상·환불).",
+    "테스트: 단위(catalog 5 + ordering 6 + inventory 5) + E2E 9 = 25개. 자바 23개와 핵심 수용기준이 동등합니다."
+  ]
+}
