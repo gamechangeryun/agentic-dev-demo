@@ -37,7 +37,7 @@ git clone https://github.com/say828/agentic-dev-demo.git
 cd agentic-dev-demo/auth/java/complete    # 또는 learning 에서 시작
 
 ./gradlew build -x test    # contract: build
-./gradlew test             # contract: proof
+./gradlew test             # contract: proof  (auth 10/10)
 ./gradlew uiParity         # contract: verify_dev (auth·finance)
 ```
 

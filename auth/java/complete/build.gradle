@@ -56,6 +56,8 @@ tasks.register('generateProofResults') {
             status: (failed == 0 ? 'PASS' : 'FAIL'),
             tests: tests,
         ]))
+        // 슬라이드(S11·S12)에 보이는 한 줄 판정: 콘솔에도 PASS/FAIL 집계를 찍는다.
+        println "[proof] ${failed == 0 ? 'PASS' : 'FAIL'} · ${passed}/${passed + failed} passed -> tmp/proof-results.json"
     }
 }
 
