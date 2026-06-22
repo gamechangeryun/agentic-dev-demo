@@ -6,7 +6,7 @@
 ## 실행
 ```bash
 ./gradlew build -x test                  # build
-./gradlew test                           # proof  → 10/10 PASS (tmp/proof-results.json)
+./gradlew test                           # proof  → 2/2 PASS (tmp/proof-results.json)
 ./gradlew uiParity                        # verify_dev (회귀 게이트 재실행)
 ```
 
