@@ -1,0 +1,31 @@
+// 3강 대조 데모(자바). 명세 없이(vibe) vs 명세대로(SDD)를 같은 수용기준으로 채점한다.
+// JDK 17 + Gradle Wrapper만 있으면 바로 빌드·채점된다.
+plugins { id 'java' }
+
+group = 'dev.agentic.demo'
+version = '1.0.0'
+
+java { toolchain { languageVersion = JavaLanguageVersion.of(17) } }
+
+repositories { mavenCentral() }
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+tasks.named('test') { useJUnitPlatform() }
+
+// 학습자 채점: ./gradlew grade
+//  - src/main/java/.../MyOtp.java 가 있으면 그 구현을 AC-1~4로 채점한다.
+//  - 없으면 참고 SDD 구현(4/4)을 채점한다.
+tasks.register('grade', JavaExec) {
+    group = 'verification'
+    description = '학습자의 Otp 구현(MyOtp)을 수용기준 AC-1~4로 채점한다'
+    dependsOn 'classes'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'dev.agentic.demo.Grade'
+    ignoreExitValue = true   // 점수만 보여 주고 BUILD FAILED 로 끊지 않는다
+    def myOtp = file('src/main/java/dev/agentic/demo/MyOtp.java')
+    if (myOtp.exists()) { args = ['dev.agentic.demo.MyOtp'] }
+}
