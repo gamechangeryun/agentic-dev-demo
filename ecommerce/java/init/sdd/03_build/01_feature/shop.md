@@ -4,6 +4,12 @@
 > infrastructure·web 네 레이어로 분리되어 있습니다. 이 지도는 다음 작업자가 코드를
 > 다시 읽지 않고도 무엇이 어디에 있는지 알 수 있게 합니다.
 
+> **현재 상태 (2026-06-23, init):** 섹션 1~7 구현 완료 — shared 커널 + 6개 컨텍스트
+> (catalog·inventory·cart·ordering·payment·checkout), 총 44개 `.java`. checkout 은
+> 결제·환불을 포함한 취소 보상(cancel = inventory.release + payments.refund)과 체크아웃
+> 흐름을 오케스트레이션. 엔드포인트 **21/21 라이브**. 검증: 단위 14 + E2E 9 = **23/23 PASS**
+> · 경계 게이트 PASS.
+
 ## 모듈 구조 (모놀리식 · DDD)
 
 ```

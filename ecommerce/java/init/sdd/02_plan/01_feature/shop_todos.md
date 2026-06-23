@@ -2,6 +2,11 @@
 
 > EARS 명세를 구현 가능한 작업 단위로 분해합니다. Execution Checklist 의 각 구역은
 > 서로 의존성이 낮아 병렬로 잡을 수 있습니다. 구역 하나가 대략 PR 하나에 대응됩니다.
+>
+> **진행 메모 (2026-06-23, init):** 전체 구역(1~8) 구현 완료. ① 도메인 구역(1~6: shared +
+> catalog·inventory·cart·ordering·payment) → ② checkout 오케스트레이션(7: 체크아웃 +
+> 취소 보상) 순으로 build 단계 진행. 결과: 엔드포인트 21/21 라이브, 단위 14 + E2E 9 =
+> **23/23 PASS**, DDD 경계 게이트 PASS.
 
 ## Acceptance Criteria 체크리스트
 
@@ -52,10 +57,10 @@
 
 ### 7. 체크아웃 오케스트레이션 (checkout)
 - [x] CheckoutService 에 장바구니→예약→주문 흐름과 실패 시 보상 해제를 구현한다.
-- [x] 취소 보상(예약 해제 + 결제 환불)을 구현한다.
-- [x] CheckoutController 로 체크아웃을 노출한다.
+- [x] 취소 보상(예약 해제 + 결제 환불)을 구현한다. → cancel() 이 inventory.release + payments.refund 오케스트레이션.
+- [x] CheckoutController 로 체크아웃(`POST /api/checkout`)·취소(`POST /api/orders/{id}/cancel`)를 노출한다.
 
 ### 8. 검증 (verify)
-- [x] 도메인 단위 테스트(ProductTest·OrderTest·InventoryServiceTest)를 작성한다.
-- [x] @SpringBootTest + MockMvc E2E 9개 시나리오를 작성한다.
-- [x] ./gradlew build 로 23개 전부 green 을 확인한다.
+- [x] 도메인 단위 테스트(ProductTest·OrderTest·InventoryServiceTest)는 스펙으로 제공됨 → 14/14 PASS.
+- [x] @SpringBootTest + MockMvc E2E 9개 시나리오는 스펙으로 제공됨 → 9/9 PASS.
+- [x] ./gradlew test 로 23개 전부 green 을 확인한다. → 23/23 PASS, 엔드포인트 21/21.
