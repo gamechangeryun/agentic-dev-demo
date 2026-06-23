@@ -1,21 +1,60 @@
+"use client";
+
 /**
- * 거래 조회 화면 — 시작 상태(placeholder).
- *
- * 정답(complete/web)에서는 QueryForm(sggCd·년·월) → getTransactions 조회 →
- * 동/단지 검색·면적 필터·해제거래 토글·정렬·페이징 테이블을 렌더합니다.
- *
- * TODO: 발화로 구현하세요. lib/api.ts 의 getTransactions, components/query-form 의
- *       QueryForm 을 사용하고, E2E가 기대하는 data-testid 를 답니다:
- *       tx-sggcd, tx-year, tx-month, btn-search, transactions-table,
- *       tx-row, cancel-badge, filter-canceled.
+ * 거래 조회 화면. QueryForm(tx)으로 조회 → TransactionTable 렌더(해제 토글 포함).
+ * E2E data-testid: tx-sggcd, tx-year, tx-month, btn-search, transactions-table, tx-row, cancel-badge, filter-canceled.
  */
+import { useState } from "react";
+import { toast } from "sonner";
+
+import { getTransactions } from "@/lib/api";
+import type { AptTransaction, QueryParams } from "@/lib/types";
+import { QueryForm } from "@/components/query-form";
+import { TransactionTable } from "@/components/transaction-table";
+
 export default function TransactionsPage() {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<AptTransaction[] | null>(null);
+
+  async function handleSearch(params: QueryParams) {
+    setLoading(true);
+    try {
+      const rows = await getTransactions(params);
+      setData(rows);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "조회에 실패했습니다.");
+      setData([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <div className="mx-auto max-w-2xl space-y-2 py-10">
-      <h1 className="text-2xl font-bold tracking-tight">거래 조회</h1>
-      <p className="text-sm text-muted-foreground">
-        TODO: 발화로 구현 — 조회 폼과 거래 원장 테이블을 만드세요.
-      </p>
+    <div className="space-y-6">
+      <header className="space-y-1">
+        <h1 className="text-2xl font-bold tracking-tight">거래 조회</h1>
+        <p className="text-sm text-muted-foreground">
+          시군구·계약년월로 실거래를 조회합니다. 해제거래는 배지로 표시되고 토글로
+          제외할 수 있습니다.
+        </p>
+      </header>
+
+      <QueryForm
+        testPrefix="tx"
+        searchTestId="btn-search"
+        submitLabel="조회"
+        loading={loading}
+        onSubmit={handleSearch}
+        defaultValues={{ sggCd: "11110", dealYear: 2024, dealMonth: 5 }}
+      />
+
+      {data ? (
+        <TransactionTable transactions={data} />
+      ) : (
+        <p className="text-sm text-muted-foreground">
+          조건을 입력하고 조회를 누르세요.
+        </p>
+      )}
     </div>
   );
 }

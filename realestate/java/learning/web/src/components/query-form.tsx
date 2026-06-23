@@ -1,16 +1,18 @@
 "use client";
 
 /**
- * 조회 폼 (거래·분석 공용) — 시작 상태(placeholder).
+ * 조회 폼 (거래·분석 공용).
  *
- * 정답(complete/web)에서는 sggCd(5자리)·계약년·계약월 입력과 검증, 제출 버튼을 렌더하고
- * onSubmit({ sggCd, dealYear, dealMonth }) 를 호출합니다.
- *
- * 시그니처(props)는 그대로 둡니다. 구현부는 발화로 채웁니다.
- * E2E가 기대하는 data-testid: `${testPrefix}-sggcd`, `${testPrefix}-year`,
- * `${testPrefix}-month`, 그리고 제출 버튼의 `searchTestId`.
+ * sggCd(5자리)·계약년·계약월 입력을 받아 onSubmit({ sggCd, dealYear, dealMonth })을 호출한다.
+ * E2E data-testid: `${testPrefix}-sggcd`, `${testPrefix}-year`, `${testPrefix}-month`, 제출 버튼 `searchTestId`.
  */
+import { useState } from "react";
+import { Search } from "lucide-react";
+
 import type { QueryParams } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface QueryFormProps {
   /** data-testid 접두어 ("tx" 또는 "an") */
@@ -24,11 +26,81 @@ interface QueryFormProps {
   defaultValues?: Partial<QueryParams>;
 }
 
-export function QueryForm(props: QueryFormProps) {
-  // TODO: 발화로 구현 — 입력 폼과 검증, onSubmit 호출.
+export function QueryForm({
+  testPrefix,
+  searchTestId,
+  submitLabel,
+  loading,
+  onSubmit,
+  defaultValues,
+}: QueryFormProps) {
+  const [sggCd, setSggCd] = useState(defaultValues?.sggCd ?? "");
+  const [dealYear, setDealYear] = useState(
+    defaultValues?.dealYear ? String(defaultValues.dealYear) : "",
+  );
+  const [dealMonth, setDealMonth] = useState(
+    defaultValues?.dealMonth ? String(defaultValues.dealMonth) : "",
+  );
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    onSubmit({
+      sggCd: sggCd.trim(),
+      dealYear: Number(dealYear),
+      dealMonth: Number(dealMonth),
+    });
+  }
+
   return (
-    <div className="rounded-xl border bg-card p-4 text-sm text-muted-foreground">
-      TODO: 발화로 구현 — 조회 폼({props.submitLabel}).
-    </div>
+    <form
+      onSubmit={handleSubmit}
+      className="grid grid-cols-1 gap-3 rounded-xl border bg-card p-4 sm:grid-cols-4 sm:items-end"
+    >
+      <div className="space-y-1.5">
+        <Label htmlFor={`${testPrefix}-sggcd`}>시군구코드</Label>
+        <Input
+          id={`${testPrefix}-sggcd`}
+          data-testid={`${testPrefix}-sggcd`}
+          inputMode="numeric"
+          placeholder="11110"
+          maxLength={5}
+          value={sggCd}
+          onChange={(e) => setSggCd(e.target.value)}
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor={`${testPrefix}-year`}>계약년</Label>
+        <Input
+          id={`${testPrefix}-year`}
+          data-testid={`${testPrefix}-year`}
+          inputMode="numeric"
+          placeholder="2024"
+          maxLength={4}
+          value={dealYear}
+          onChange={(e) => setDealYear(e.target.value)}
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor={`${testPrefix}-month`}>계약월</Label>
+        <Input
+          id={`${testPrefix}-month`}
+          data-testid={`${testPrefix}-month`}
+          inputMode="numeric"
+          placeholder="5"
+          maxLength={2}
+          value={dealMonth}
+          onChange={(e) => setDealMonth(e.target.value)}
+        />
+      </div>
+      <Button
+        type="submit"
+        data-testid={searchTestId}
+        disabled={loading}
+        className="w-full"
+      >
+        <Search className="h-4 w-4" />
+        {loading ? "조회 중…" : submitLabel}
+      </Button>
+    </form>
   );
 }

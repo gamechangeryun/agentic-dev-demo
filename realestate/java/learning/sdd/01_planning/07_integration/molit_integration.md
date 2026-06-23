@@ -1,31 +1,37 @@
-# 외부 연계 계약 (07_integration): data.go.kr 국토교통부 실거래가
+# 외부 연계 계약 — data.go.kr 아파트 매매 실거래가 (회복력)
 
-> 2단계 산출물입니다. 실재 공개 API와의 연계 계약과 회복력 정책을 박제합니다.
+> 출처(00_sources): API 공개명세(`getRTMSDataSvcAptTradeDev`)·요구사항정의서(SIR-001/002/005, CONR-001/002).
+> data.go.kr 연계의 요청·응답·회복력·에러 처리 계약. 외부 의존은 `ingestion-service` 경계에만 둔다. (SDD 2단계 산출물 · AC-2)
 
-## 엔드포인트
-- 아파트 매매 실거래가: `https://apis.data.go.kr/1613000/RTMSDataSvcAptTrade/getRTMSDataSvcAptTrade` (data.go.kr 15126469)
-- 아파트 전월세 실거래가(확장): data.go.kr 15126474
+## 1. 엔드포인트 / 요청
+- `GET https://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev`
+- 파라미터: `serviceKey`(환경변수 주입), `LAWD_CD`(5자리), `DEAL_YMD`(YYYYMM), `pageNo`, `numOfRows`(1000)
+- 인증키는 `MOLIT_SERVICE_KEY` 환경변수로만 주입(SECR-001). 코드·설정·로그 평문 금지.
 
-## 요청 파라미터
-| 파라미터 | 의미 |
-| --- | --- |
-| serviceKey | 인증키 (환경변수 `MOLIT_SERVICE_KEY`, 비노출) |
-| LAWD_CD | 법정동코드 5자리(시군구). 예: 서울 종로구 11110 |
-| DEAL_YMD | 계약월 YYYYMM. 예: 202405 |
-| pageNo / numOfRows | 페이징 |
+## 2. 응답 / 페이징
+- 응답은 **XML**(`_type=json` 미보장) → 수집 서비스가 XML 파싱(SIR-002, CONR-002).
+- `<header><resultCode>` `000`만 적재 대상. `<body>`의 `totalCount`/`numOfRows`/`pageNo`로 **전 페이지 전량** 수집(SFR-002).
+- `pageNo`를 1부터 증가시키며 `누적 건수 ≥ totalCount`까지 반복.
 
-## 응답 필드(매매, XML item)
-`sggCd`, `umdNm`, `jibun`, `aptNm`, `excluUseAr`, `dealYear/Month/Day`,
-`dealAmount`(만원·콤마), `floor`, `buildYear`, `dealingGbn`(중개/직거래), `cdealType`(해제여부 O)
+## 3. 회복력 정책 (resilience4j) — AC-2
+| 정책 | 값 | 동작 |
+| --- | --- | --- |
+| TimeLimiter | 호출 타임아웃 | 초과 시 실패로 간주 |
+| Retry | 최대 3회, 지수 백오프 | 일시 오류(01/04/99) 재시도 |
+| CircuitBreaker | 실패율 임계 초과 시 open | open 동안 **빈 결과 폴백**(부분 수집 계속) |
+- 한 시군구·페이지 실패가 배치 전체를 멈추지 않는다(부분 수집, SFR-011).
 
-## 회복력 정책 (AC-2)
-| 정책 | 값 |
-| --- | --- |
-| 재시도 | 3회, 0.5s 간격 |
-| 서킷브레이커 | sliding window 20, 실패율 50%, open 10s |
-| fallback | 빈 결과(부분 수집 허용) |
+## 4. 결과코드 처리 매핑
+| resultCode | 의미 | 처리 |
+| --- | --- | --- |
+| 000 | 정상 | item 정규화·적재 |
+| 03 | NODATA | 정상 종료(빈 결과) |
+| 01 / 04 / 99 | 내부/HTTP/알수없음 | 재시도 대상 |
+| 22 | 트래픽 초과 | 백오프 후 재시도 또는 익일 재개 |
+| 12 / 20 / 30 / 31 / 32 | 서비스없음/권한/키/만료/IP | **즉시 실패·알림**(재시도 무의미) |
 
-> data.go.kr는 트래픽·운영시간 제한이 있습니다. 외부 장애를 수집 경계 안에 가두어 거래원장·분석으로 전파시키지 않습니다.
+## 5. 트래픽 한도 가드 (CONR-001 / PER-004)
+- 개발 일일 한도 **10,000건**. 시군구·계약월 단위 순차/제한 동시 수집으로 한도 보호.
+- 호출 카운트를 추적해 한도 임박 시 백오프, 초과 전 중단·익일 재개.
 
-## 법정동코드 조회
-- 행정표준코드관리시스템 `https://www.code.go.kr/stdcode/regCodeL.do`
+> 정규화·금액 변환·해제 판정은 `common` 정합 규칙(`04_data`)을 따른다. 외부 응답 형태가 바뀌어도 이 경계 안에서 흡수한다.
