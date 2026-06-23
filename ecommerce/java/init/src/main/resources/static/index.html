@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>이커머스 모놀리식 데모 — 상품→장바구니→체크아웃→결제</title>
+<style>
+  :root { --bg:#0f1220; --card:#1a1f35; --line:#2a3150; --fg:#e7ebff; --mut:#9aa3c7;
+          --ok:#3ad29f; --warn:#ffb454; --err:#ff6b81; --accent:#6c8cff; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:14px/1.5 system-ui,"Segoe UI","Malgun Gothic",sans-serif;
+         background:var(--bg); color:var(--fg); padding:24px; }
+  h1 { font-size:20px; margin:0 0 4px; }
+  .sub { color:var(--mut); margin:0 0 20px; font-size:13px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; }
+  .card h2 { font-size:14px; margin:0 0 12px; display:flex; align-items:center; gap:8px; }
+  .step { width:22px; height:22px; border-radius:50%; background:var(--accent); color:#fff;
+          display:inline-flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
+  label { display:block; color:var(--mut); font-size:12px; margin:8px 0 4px; }
+  input,select { width:100%; padding:8px 10px; background:#0c1020; border:1px solid var(--line);
+          border-radius:8px; color:var(--fg); font-size:13px; }
+  button { margin-top:12px; width:100%; padding:9px 12px; border:0; border-radius:8px; cursor:pointer;
+          background:var(--accent); color:#fff; font-weight:600; font-size:13px; }
+  button.ghost { background:#222a48; }
+  button:active { transform:translateY(1px); }
+  .pill { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; font-weight:700; }
+  .pill.ok { background:rgba(58,210,159,.15); color:var(--ok); }
+  .pill.mut { background:#222a48; color:var(--mut); }
+  .state { font-size:12px; color:var(--mut); margin-top:10px; }
+  .state b { color:var(--fg); }
+  pre { background:#0a0e1c; border:1px solid var(--line); border-radius:10px; padding:12px;
+        overflow:auto; max-height:340px; font-size:12px; margin:0; }
+  .log-h { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .row { display:flex; gap:8px; }
+  .row > * { flex:1; }
+  .tag { font-family:ui-monospace,monospace; color:var(--accent); }
+  .full { grid-column:1/-1; }
+  .ko { font-size:12px; color:var(--mut); margin-top:6px; }
+</style>
+</head>
+<body>
+  <h1>이커머스 모놀리식 데모</h1>
+  <p class="sub">Spring Boot · 인메모리 · DDD 6컨텍스트 / 같은 오리진(<span class="tag" id="origin"></span>)에서 21개 REST API 호출</p>
+
+  <div class="state full card" style="margin-bottom:16px">
+    현재 상태 →
+    상품 <b class="tag" id="s-prod">-</b> ·
+    장바구니 <b class="tag" id="s-cart">-</b> ·
+    주문 <b class="tag" id="s-order">-</b> <span class="pill mut" id="s-ostatus">미생성</span> ·
+    결제 <b class="tag" id="s-pay">-</b>
+    <button class="ghost" style="width:auto;float:right;margin-top:-4px" onclick="autoRun()">▶ 전체 자동 시연(해피패스)</button>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2><span class="step">1</span> 상품 등록 <span class="pill mut">POST /api/products</span></h2>
+      <label>상품명</label><input id="p-name" value="노이즈캔슬링 헤드폰" />
+      <div class="row">
+        <div><label>가격(원)</label><input id="p-price" type="number" value="129000" /></div>
+        <div><label>초기 재고</label><input id="p-stock" type="number" value="10" /></div>
+      </div>
+      <button onclick="createProduct()">상품 등록</button>
+      <button class="ghost" onclick="listProducts()">상품 목록 조회 (GET)</button>
+    </div>
+
+    <div class="card">
+      <h2><span class="step">2</span> 장바구니 <span class="pill mut">POST /api/carts · items</span></h2>
+      <button onclick="createCart()">장바구니 생성</button>
+      <div class="row">
+        <div><label>담을 productId</label><input id="c-pid" placeholder="자동" /></div>
+        <div><label>수량</label><input id="c-qty" type="number" value="2" /></div>
+      </div>
+      <button onclick="addItem()">장바구니에 담기</button>
+    </div>
+
+    <div class="card">
+      <h2><span class="step">3</span> 체크아웃 <span class="pill mut">POST /api/checkout</span></h2>
+      <label>cartId</label><input id="co-cid" placeholder="자동" />
+      <button onclick="checkout()">체크아웃 (주문 CREATED)</button>
+      <p class="ko">재고를 예약(reserve)하고 주문을 만든 뒤 장바구니를 비웁니다.</p>
+    </div>
+
+    <div class="card">
+      <h2><span class="step">4</span> 결제 <span class="pill mut">POST /api/payments</span></h2>
+      <label>orderId</label><input id="pay-oid" placeholder="자동" />
+      <label>결제수단(method)</label>
+      <select id="pay-method">
+        <option value="card">card (승인)</option>
+        <option value="declined">declined (402 거절 시연)</option>
+      </select>
+      <button onclick="pay()">결제 (PAID 전환 + 예약 확정)</button>
+      <button class="ghost" onclick="cancelOrder()">주문 취소 (예약해제 + 환불 보상)</button>
+    </div>
+
+    <div class="card">
+      <h2>🔎 조회</h2>
+      <button class="ghost" onclick="getInventory()">재고 조회 GET /api/inventory/{pid}</button>
+      <button class="ghost" onclick="getCart()">장바구니 조회 GET /api/carts/{cid}</button>
+      <button class="ghost" onclick="getOrder()">주문 조회 GET /api/orders/{oid}</button>
+    </div>
+
+    <div class="card full">
+      <div class="log-h">
+        <h2 style="margin:0">📜 호출 로그</h2>
+        <button class="ghost" style="width:auto;margin:0" onclick="document.getElementById('log').textContent=''">지우기</button>
+      </div>
+      <pre id="log"></pre>
+    </div>
+  </div>
+
+<script>
+const $ = id => document.getElementById(id);
+document.getElementById('origin').textContent = location.origin;
+let pid=null, cid=null, oid=null, payid=null;
+
+function refresh(){
+  $('s-prod').textContent  = pid||'-';
+  $('s-cart').textContent  = cid||'-';
+  $('s-order').textContent = oid||'-';
+  $('s-pay').textContent   = payid||'-';
+}
+function log(title, method, path, status, body){
+  const ok = status>=200 && status<300;
+  const head = `${ok?'✅':'❌'} [${method}] ${path}  →  HTTP ${status}  · ${title}`;
+  $('log').textContent = head + "\n" + JSON.stringify(body,null,2) + "\n\n" + $('log').textContent;
+}
+async function call(method, path, body){
+  const opt = { method, headers:{} };
+  if (body!==undefined){ opt.headers['Content-Type']='application/json'; opt.body=JSON.stringify(body); }
+  if (method==='POST' && (path==='/api/products'||path==='/api/checkout'||path==='/api/payments'))
+    opt.headers['Idempotency-Key'] = 'ui-'+path.replaceAll('/','_')+'-'+Date.now();
+  const res = await fetch(path, opt);
+  let data; try { data = await res.json(); } catch { data = {}; }
+  return { status:res.status, data };
+}
+
+async function createProduct(){
+  const r = await call('POST','/api/products',
+    { name:$('p-name').value, price:Number($('p-price').value), initialStock:Number($('p-stock').value) });
+  log('상품 등록','POST','/api/products',r.status,r.data);
+  if(r.status<300){ pid=r.data.id; $('c-pid').value=pid; refresh(); }
+}
+async function listProducts(){
+  const r = await call('GET','/api/products?size=20');
+  log('상품 목록','GET','/api/products',r.status,r.data);
+}
+async function createCart(){
+  const r = await call('POST','/api/carts');
+  log('장바구니 생성','POST','/api/carts',r.status,r.data);
+  if(r.status<300){ cid=r.data.cartId; $('co-cid').value=cid; refresh(); }
+}
+async function addItem(){
+  if(!cid) return alert('먼저 장바구니를 생성하세요');
+  const r = await call('POST',`/api/carts/${cid}/items`,
+    { productId:$('c-pid').value||pid, qty:Number($('c-qty').value) });
+  log('장바구니 담기','POST',`/api/carts/${cid}/items`,r.status,r.data);
+}
+async function checkout(){
+  const useCid = $('co-cid').value||cid;
+  if(!useCid) return alert('cartId가 없습니다');
+  const r = await call('POST','/api/checkout',{ cartId:useCid });
+  log('체크아웃','POST','/api/checkout',r.status,r.data);
+  if(r.status<300){ oid=r.data.id; $('pay-oid').value=oid; $('s-ostatus').textContent=r.data.status;
+    $('s-ostatus').className='pill ok'; refresh(); }
+}
+async function pay(){
+  const useOid = $('pay-oid').value||oid;
+  if(!useOid) return alert('orderId가 없습니다');
+  const r = await call('POST','/api/payments',{ orderId:useOid, method:$('pay-method').value });
+  log('결제','POST','/api/payments',r.status,r.data);
+  if(r.status<300){ payid=r.data.id; refresh(); getOrder(); }
+}
+async function cancelOrder(){
+  const useOid = $('pay-oid').value||oid;
+  if(!useOid) return alert('orderId가 없습니다');
+  const r = await call('POST',`/api/orders/${useOid}/cancel`);
+  log('주문 취소','POST',`/api/orders/${useOid}/cancel`,r.status,r.data);
+  if(r.status<300){ $('s-ostatus').textContent=r.data.status; }
+}
+async function getInventory(){
+  if(!pid) return alert('productId가 없습니다');
+  const r = await call('GET',`/api/inventory/${pid}`);
+  log('재고 조회','GET',`/api/inventory/${pid}`,r.status,r.data);
+}
+async function getCart(){
+  if(!cid) return;
+  const r = await call('GET',`/api/carts/${cid}`);
+  log('장바구니 조회','GET',`/api/carts/${cid}`,r.status,r.data);
+}
+async function getOrder(){
+  const useOid = $('pay-oid').value||oid;
+  if(!useOid) return;
+  const r = await call('GET',`/api/orders/${useOid}`);
+  log('주문 조회','GET',`/api/orders/${useOid}`,r.status,r.data);
+  if(r.status<300){ $('s-ostatus').textContent=r.data.status; }
+}
+async function autoRun(){
+  await createProduct(); await createCart(); await addItem();
+  await checkout(); await getInventory(); await pay(); await getInventory();
+}
+refresh();
+</script>
+</body>
+</html>
